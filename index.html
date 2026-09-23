@@ -1,0 +1,418 @@
+<!doctype html>
+<html lang="ru">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Как работают специальные предложения и акции</title>
+        <meta name="robots" content="noindex, nofollow">
+        <style>
+            /* Базовый сброс и типографика */
+            *,
+            *::before,
+            *::after {
+                box-sizing: border-box;
+            }
+
+            body {
+                margin: 0;
+                padding: 0;
+                font-family:
+                    -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+                    Arial, sans-serif;
+                background-color: #f8f9fa;
+                color: #212529;
+            }
+
+            .promo-guide {
+                padding: 50px 0;
+            }
+
+            .promo-guide__container {
+                max-width: 1200px;
+                margin: 0 auto;
+                padding: 0 20px;
+            }
+
+            /* Заголовок и вводный текст */
+            .promo-guide__header {
+                margin-bottom: 36px;
+            }
+
+            .promo-guide__title {
+                font-size: clamp(1.6rem, 1.3rem + 1vw, 2.2rem);
+                font-weight: 700;
+                margin: 0 0 14px 0;
+                color: #111;
+            }
+
+            .promo-guide__intro {
+                font-size: 1.05rem;
+                color: #555;
+                margin: 0;
+                line-height: 1.55;
+                max-width: 950px;
+            }
+
+            /* Сетка шагов (на десктопе 2 блока сверху, 2 внизу) */
+            .steps-grid {
+                list-style: none;
+                padding: 0;
+                margin: 0;
+                display: grid;
+                grid-template-columns: repeat(1, 1fr);
+                gap: 24px;
+            }
+
+            /* Карточка шага */
+            .step-card {
+                background: #ffffff;
+                border: 1px solid #e9ecef;
+                border-radius: 14px;
+                padding: 28px;
+                display: flex;
+                flex-direction: column;
+                box-shadow: 0 4px 14px rgba(0, 0, 0, 0.03);
+                transition:
+                    transform 0.2s ease,
+                    box-shadow 0.2s ease;
+            }
+
+            .step-card:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 8px 24px rgba(0, 0, 0, 0.06);
+            }
+
+            .step-card__number {
+                font-size: 1.6rem;
+                font-weight: 800;
+                color: #e0b400;
+                margin-bottom: 12px;
+                line-height: 1;
+            }
+
+            .step-card__title {
+                font-size: 1.2rem;
+                font-weight: 700;
+                margin: 0 0 16px 0;
+                color: #111;
+                line-height: 1.35;
+            }
+
+            .step-card__lead {
+                font-size: 0.95rem;
+                color: #333;
+                margin: 0 0 12px 0;
+                line-height: 1.5;
+            }
+
+            .steps-card__content {
+                &::before {
+                    content: counter(cardCounter);
+                    counter-increment: cardCounter;
+
+                    width: 24px;
+                    height: 24px;
+                    border-radius: 50%;
+                    background-color: #ffd200;
+                    display: -webkit-box;
+                    display: -ms-flexbox;
+                    display: flex;
+                    -webkit-box-pack: center;
+                    -ms-flex-pack: center;
+                    justify-content: center;
+                    -webkit-box-align: center;
+                    -ms-flex-align: center;
+                    align-items: center;
+
+                    font-family: "Mulish", "Arial", sans-serif;
+
+                    font-size: 1.6rem;
+                    font-weight: 800;
+                    color: #ffffff;
+                    margin-bottom: 12px;
+                    line-height: 1;
+
+                    padding: 20px;
+                }
+            }
+
+            /* Списки внутри шагов */
+            .step-card__list {
+                padding-left: 20px;
+                margin: 0;
+                font-size: 0.92rem;
+                line-height: 1.55;
+                color: #495057;
+            }
+
+            .step-card__list li {
+                margin-bottom: 10px;
+            }
+
+            .step-card__list li:last-child {
+                margin-bottom: 0;
+            }
+
+            /* Вложенные блоки для сценария договора (Шаг 2) */
+            .sub-section {
+                background: #fdfdfd;
+                border: 1px solid #f1f3f5;
+                border-radius: 8px;
+                padding: 16px 18px;
+                margin-bottom: 14px;
+            }
+
+            .sub-section:last-child {
+                margin-bottom: 0;
+            }
+
+            .sub-section__heading {
+                font-size: 0.95rem;
+                color: #111;
+                margin: 0 0 10px 0;
+                display: block;
+            }
+
+            .sub-section .step-card__list {
+                padding-left: 18px;
+            }
+
+            /* Ссылки */
+            .step-card a {
+                color: #0b5ed7;
+                text-decoration: underline;
+            }
+
+            .step-card a:hover {
+                text-decoration: none;
+            }
+
+            /* Адаптив: на экранах 991px и меньше карточки идут строго одна под другой */
+            @media (max-width: 991px) {
+                .steps-grid {
+                    grid-template-columns: 1fr;
+                }
+
+                .promo-guide {
+                    padding: 35px 0;
+                }
+
+                .step-card {
+                    padding: 22px;
+                }
+            }
+        </style>
+    </head>
+    <body>
+        <section class="promo-guide">
+            <div
+                class="promo-guide__container"
+                itemscope
+                itemtype="https://schema.org/HowTo">
+                <div class="promo-guide__header">
+                    <h2 class="promo-guide__title" itemprop="name">
+                        Как работают специальные предложения и акции РН-Карт
+                    </h2>
+                    <p class="promo-guide__intro" itemprop="text">
+                        Условия проведения акций и начисления скидок могут
+                        различаться в зависимости от направленности предложения
+                        (сезонные скидки на определенные виды топлива,
+                        партнерские программы или специальные условия на
+                        сопутствующие сервисы). Ниже описан общий порядок
+                        участия для клиентов ООО «РН-Карт».
+                    </p>
+                </div>
+
+                <ol class="steps-grid">
+                    <!-- Шаг 1 -->
+                    <li
+                        class="step-card"
+                        itemprop="step"
+                        itemscope
+                        itemtype="https://schema.org/HowToStep">
+                        <meta itemprop="position" content="1" />
+
+                        <h3 class="step-card__title" itemprop="name">
+                            Ознакомьтесь с условиями интересующей акции
+                        </h3>
+                        <p class="step-card__lead" itemprop="description">
+                            Каждое специальное предложение в данном разделе
+                            содержит индивидуальные параметры:
+                        </p>
+                        <div class="steps-card__content" itemprop="text">
+                            <ul class="step-card__list">
+                                <li>
+                                    <strong>Категория клиентов:</strong> для
+                                    всех действующих договоров, для отдельных
+                                    тарифных планов (например, «Базовый») или
+                                    только для новых клиентов при первичном
+                                    подключении.
+                                </li>
+                                <li>
+                                    <strong>Виды топлива и услуг:</strong>
+                                    бензин, дизельное топливо, газ (СУГ/КПГ) или
+                                    сервисные услуги.
+                                </li>
+                                <li>
+                                    <strong>География действия:</strong> сеть
+                                    АЗС ПАО «НК «Роснефть» по всей России либо
+                                    выделенный перечень станций и трассовых
+                                    маршрутов (список доступен для скачивания на
+                                    странице конкретной акции).
+                                </li>
+                                <li>
+                                    <strong>Сроки проведения:</strong> точный
+                                    период действия скидок или ограничение по
+                                    общему объему выборки.
+                                </li>
+                            </ul>
+                        </div>
+                    </li>
+
+                    <!-- Шаг 2 -->
+                    <li
+                        class="step-card"
+                        class="step-card"
+                        itemprop="step"
+                        itemscope
+                        itemtype="https://schema.org/HowToStep">
+                        <meta itemprop="position" content="2" />
+
+                        <h3 class="step-card__title" itemprop="name">
+                            Проверьте готовность договора к участию
+                        </h3>
+
+                        <div class="steps-card__content" itemprop="text">
+                            <div class="sub-section">
+                                <strong class="sub-section__heading"
+                                    >Если у вас уже заключен договор с ООО
+                                    «РН-Карт»:</strong
+                                >
+                                <ul class="step-card__list">
+                                    <li>
+                                        Войдите в веб-версию Личного кабинета
+                                        или мобильное приложение управляющего
+                                        автопарком.
+                                    </li>
+                                    <li>
+                                        Убедитесь, что ваш текущий тарифный план
+                                        соответствует требованиям акции. Если
+                                        требуется смена тарифа или
+                                        дополнительное соглашение, направьте
+                                        запрос через кабинет, свяжитесь с
+                                        персональным менеджером или позвоните по
+                                        телефону круглосуточной поддержки:
+                                        <strong>8 800 200-10-70</strong>.
+                                    </li>
+                                    <li>
+                                        Проверьте наличие достаточного баланса
+                                        на лицевом счете договора (пополнение
+                                        доступно по безналичному расчету или
+                                        моментально без комиссии через Систему
+                                        быстрых платежей).
+                                    </li>
+                                </ul>
+                            </div>
+
+                            <div class="sub-section">
+                                <strong class="sub-section__heading"
+                                    >Если вы планируете стать клиентом:</strong
+                                >
+                                <ul class="step-card__list">
+                                    <li>
+                                        Выберите подходящий тарифный план в
+                                        <a
+                                            href="https://rn-card.ru/turn/catalog/"
+                                            target="_blank"
+                                            >Каталоге программ</a
+                                        >
+                                        («Топливо онлайн», «Выгодный транзит»
+                                        или «Для коммерческих организаций») и
+                                        отправьте заявку на заключение договора
+                                        прямо со страницы программы.
+                                    </li>
+                                    <li>
+                                        Оформите договор дистанционно через
+                                        систему электронного документооборота
+                                        (СБИС или Контур.Диадок) с помощью
+                                        квалифицированной электронной подписи
+                                        (КЭП).
+                                    </li>
+                                    <li>
+                                        Выпустите карты: виртуальные создаются в
+                                        Личном кабинете моментально для работы
+                                        через мобильное приложение водителя, а
+                                        пластиковые можно получить в
+                                        региональном офисе продаж.
+                                    </li>
+                                    <li>
+                                        После зачисления средств на лицевой счет
+                                        договора вам станут доступны все акции,
+                                        действующие для выбранного тарифа.
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </li>
+
+                    <!-- Шаг 3 -->
+                    <li
+                        class="step-card"
+                        class="step-card"
+                        itemprop="step"
+                        itemscope
+                        itemtype="https://schema.org/HowToStep">
+                        <meta itemprop="position" content="3" />
+                        <div class="steps-card__content" itemprop="text">
+                            <h3 class="step-card__title" itemprop="name">
+                                Совершайте заправки на участвующих АЗС
+                            </h3>
+                            <ul class="step-card__list">
+                                <li>
+                                    Водитель оплачивает топливо пластиковой
+                                    картой или через мобильное приложение (по
+                                    динамическому штрихкоду на кассе).
+                                </li>
+                                <li>
+                                    Дополнительный акционный дисконт
+                                    рассчитывается автоматически в соответствии
+                                    с правилами акции: непосредственно в момент
+                                    проведения операции на АЗС либо по итогам
+                                    расчетного периода при выставлении счета.
+                                </li>
+                            </ul>
+                        </div>
+                    </li>
+
+                    <!-- Шаг 4 -->
+                    <li
+                        class="step-card"
+                        class="step-card"
+                        itemprop="step"
+                        itemscope
+                        itemtype="https://schema.org/HowToStep">
+                        <meta itemprop="position" content="4" />
+                        <h3 class="step-card__title" itemprop="name">
+                            Получайте прозрачную отчетность и налоговые вычеты
+                        </h3>
+                        <ul class="step-card__list" itemprop="text">
+                            <li>
+                                Вся история операций с учетом примененных скидок
+                                и бонусов доступна в режиме реального времени в
+                                транзакционном отчете в Личном кабинете.
+                            </li>
+                            <li>
+                                По окончании отчетного месяца формируется единый
+                                универсальный передаточный документ (УПД),
+                                направляемый через ЭДО. Он подтверждает
+                                фактические расходы автопарка и позволяет
+                                принять к вычету НДС 22% в полном соответствии с
+                                требованиями Налогового кодекса РФ.
+                            </li>
+                        </ul>
+                    </li>
+                </ol>
+            </div>
+        </section>
+    </body>
+</html>
